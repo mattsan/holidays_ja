@@ -9,9 +9,10 @@ use Mix.Config
 # third-party users, it should be done in your "mix.exs" file.
 
 # You can configure your application as:
-#
-#     config :holidays_ja, key: :value
-#
+
+config :holidays_ja,
+  url: "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
+
 # and access this configuration in your application as:
 #
 #     Application.get_env(:holidays_ja, :key)
