@@ -20,7 +20,8 @@ defmodule HolidaysJa.MixProject do
   defp deps do
     [
       {:iconv, "~> 1.0"},
-      {:httpoison, "~> 1.5"}
+      {:httpoison, "~> 1.5"},
+      {:csv, "~> 2.3"}
     ]
   end
 end

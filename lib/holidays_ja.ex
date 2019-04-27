@@ -5,7 +5,24 @@ defmodule HolidaysJa do
   see [国民の祝日について - 内閣府](https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html)
   """
 
+  alias HolidaysJa.Holiday
+
   @holiday_url Application.get_env(:holidays_ja, :url)
+
+  def load(filename) do
+    File.stream!(filename)
+    |> CSV.decode!(headers: [:date, :name])
+    |> Enum.map(fn %{date: date, name: name} -> %Holiday{date: date, name: name} end)
+  end
+
+  def save(holidays, filename) do
+    File.open(filename, [:write, :utf8], fn file ->
+      holidays
+      |> CSV.encode(headers: [:date, :name])
+      |> Stream.each(&IO.write(file, &1))
+      |> Enum.to_list()
+    end)
+  end
 
   def fetch do
     {:ok, response} = HTTPoison.get(@holiday_url)
@@ -25,6 +42,6 @@ defmodule HolidaysJa do
       |> List.to_tuple()
       |> Date.from_erl!()
 
-    {date, name}
+    %Holiday{date: date, name: name}
   end
 end
