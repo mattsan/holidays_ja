@@ -7,11 +7,13 @@ defmodule HolidaysJa.Worker do
   @name __MODULE__
 
   def start_link(args) do
-    GenServer.start_link(__MODULE__, args, name: @name)
+    csv = Keyword.get(args, :csv, Application.get_env(:holidays_ja, :csv))
+
+    GenServer.start_link(__MODULE__, %{csv: csv}, name: @name)
   end
 
   def init(args) do
-    case args[:csv] do
+    case args.csv do
       nil -> fetch()
       filename -> load(filename)
     end
