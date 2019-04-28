@@ -22,14 +22,14 @@ defmodule HolidaysJa.Worker do
   end
 
   def load(filename) do
-    Logger.debug "loading from #{filename}..."
+    Logger.debug("loading from #{filename}...")
     holidays = Holiday.load(filename)
     store(holidays)
   end
 
   def fetch do
-    Logger.debug "fetching..."
-    holidays = Holiday.fetch
+    Logger.debug("fetching...")
+    holidays = Holiday.fetch()
     store(holidays)
   end
 
@@ -58,7 +58,7 @@ defmodule HolidaysJa.Worker do
   end
 
   def handle_cast({:store, holidays}, state) do
-    Logger.debug "stored #{Enum.count(holidays)} days"
+    Logger.debug("stored #{Enum.count(holidays)} days")
     {:noreply, %{state | holidays: holidays, stored: true}}
   end
 

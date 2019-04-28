@@ -9,22 +9,24 @@ defmodule HolidaysJa.Holiday do
   def lookup(holidays, filter) do
     case filter do
       [year: year] ->
-        for (%{date: %{year: ^year}} = holiday) <- holidays, do: holiday
+        for %{date: %{year: ^year}} = holiday <- holidays, do: holiday
 
       [year: year, month: month] ->
-        for (%{date: %{year: ^year, month: ^month}} = holiday) <- holidays, do: holiday
+        for %{date: %{year: ^year, month: ^month}} = holiday <- holidays, do: holiday
     end
   end
 
   def is_holiday?(holidays, %Date{} = date) do
     result = for %{date: ^date} <- holidays, do: true
+
     case result do
       [true] -> true
       [] -> false
     end
   end
 
-  def is_holiday?(holidays, {y, m, d} = erl_date) when is_integer(y) and is_integer(m) and is_integer(d) do
+  def is_holiday?(holidays, {y, m, d} = erl_date)
+      when is_integer(y) and is_integer(m) and is_integer(d) do
     case Date.from_erl(erl_date) do
       {:ok, date} -> is_holiday?(holidays, date)
       _ -> false
@@ -42,7 +44,9 @@ defmodule HolidaysJa.Holiday do
   def load(filename) do
     File.stream!(filename)
     |> CSV.decode!(headers: true)
-    |> Enum.map(fn %{"date" => date, "name" => name} -> %Holiday{date: Date.from_iso8601!(date), name: name} end)
+    |> Enum.map(fn %{"date" => date, "name" => name} ->
+      %Holiday{date: Date.from_iso8601!(date), name: name}
+    end)
   end
 
   def save(holidays, filename) do

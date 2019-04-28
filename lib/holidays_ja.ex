@@ -21,6 +21,6 @@ defmodule HolidaysJa do
   def lookup_as_map(year) do
     lookup(year)
     |> Enum.map(&{&1.date, &1.name})
-    |> Map.new
+    |> Map.new()
   end
 end
