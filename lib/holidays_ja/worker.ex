@@ -41,8 +41,20 @@ defmodule HolidaysJa.Worker do
     GenServer.call(@name, :stored)
   end
 
+  def all do
+    GenServer.call(@name, :all)
+  end
+
   def lookup(year) do
-    GenServer.call(@name, {:lookup, :year, year})
+    GenServer.call(@name, {:lookup, year: year})
+  end
+
+  def lookup(year, month) do
+    GenServer.call(@name, {:lookup, year: year, month: month})
+  end
+
+  def is_holiday?(date) do
+    GenServer.call(@name, {:is_holiday, date})
   end
 
   def handle_cast({:store, holidays}, state) do
@@ -54,8 +66,17 @@ defmodule HolidaysJa.Worker do
     {:reply, state.stored, state}
   end
 
-  def handle_call({:lookup, :year, year}, _from, state) do
-    holidays = Holiday.lookup(state.holidays, year)
+  def handle_call(:all, _from, state) do
+    {:reply, state.holidays, state}
+  end
+
+  def handle_call({:lookup, filter}, _from, state) do
+    holidays = Holiday.lookup(state.holidays, filter)
     {:reply, holidays, state}
+  end
+
+  def handle_call({:is_holiday, date}, _from, state) do
+    result = Holiday.is_holiday?(state.holidays, date)
+    {:reply, result, state}
   end
 end

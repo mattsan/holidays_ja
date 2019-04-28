@@ -13,7 +13,10 @@ defmodule HolidaysJa do
 
   defdelegate store(holidays), to: Worker
   defdelegate stored?, to: Worker
+  defdelegate all, to: Worker
   defdelegate lookup(year), to: Worker
+  defdelegate lookup(year, month), to: Worker
+  defdelegate is_holiday?(date), to: Worker
 
   def lookup_as_map(year) do
     lookup(year)
